@@ -28,3 +28,11 @@ bool Triangle::Is90() {
         return false;
     }
 }
+
+bool Triangle::IsRav2() {
+    return (a == b || a == c || b == c);
+}
+
+bool Triangle::IsRav3() {
+    return (a == b && b == c);
+}

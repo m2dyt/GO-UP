@@ -8,4 +8,6 @@ public:
     void PrintTriangle();
     bool IsTriangle();
     bool Is90();
+    bool IsRav2();
+    bool IsRav3();
 };

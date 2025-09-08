@@ -25,6 +25,22 @@ int main() {
             std::cout << "Труегольник не прямоугольный" << std::endl;
         }
 
+        if (triangle1.IsRav3()) {
+            std::cout << "Треуголник равносторонний " << std::endl;
+            std::cout << "Не равнобедренный так как равносторонний " << std::endl;
+        }
+        else {
+            std::cout << "Треуголник не равносторонний " << std::endl;
+            if (triangle1.IsRav2()) {
+                std::cout << "Треугольник равнобедренный " << std::endl;
+            }
+            else {
+                std::cout << "Треугольник не равнобедренный " << std::endl;
+            }
+        }
+
+       
+
     }
     else {
         std::cout << "Труегольник не существует " << std::endl;
