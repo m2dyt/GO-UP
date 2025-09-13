@@ -91,7 +91,7 @@ int main()
         std::cout << "1. Добавить элемент в конец\n";
         std::cout << "2. Удалить последний элемент\n";
         std::cout << "3. Показать список\n";
-        std::cout << "4. Найти минимальное |ai - aq|\n";
+        std::cout << "4. Найти минимальное |ai - a_mid|\n";
         std::cout << "0. Выход\n";
         std::cout << "Выбор: ";
         std::cin >> choose;
@@ -128,7 +128,7 @@ int main()
             }
             else {
                 
-                std::cout << "Минимальное |ai - aq| = " << LabCh(head) << std::endl;
+                std::cout << "Минимальное |ai - a_mid| = " << LabCh(head) << std::endl;
             }
             break;
         }
@@ -137,5 +137,12 @@ int main()
         }
         }
     }
+    while (head) {
+        Node* temp = head;
+        head = head->next;
+        delete temp;
+    }
 }
+
+
 

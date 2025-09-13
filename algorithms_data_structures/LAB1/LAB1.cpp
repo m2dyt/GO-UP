@@ -21,8 +21,8 @@ int SumPosNumber(int* A, int n) {
 }
 
 
-int CountNegNumber(int count_n) {
-    return count_n;
+void CountNegNumber(int count_n) {
+    std::cout << "Кол-во отрицательных элементов " << count_n << std::endl;
 }
 
 
@@ -60,7 +60,7 @@ int main()
             std::cout << "Сумма положительных элементов " << SumPosNumber(A, n) << std::endl;
             break;
         case 2:
-            std::cout << "Кол-во отрицательных элементов " << CountNegNumber(count_n) << std::endl;
+            CountNegNumber(count_n);
             break;
         default:
             std::cout << "Неверный выбор\n";
