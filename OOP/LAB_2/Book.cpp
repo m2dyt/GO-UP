@@ -3,16 +3,15 @@
 
 Book::Book() : title("Неизвестно"), author("Неизвестно"), year(0) {}
 
-Book::Book(const std::string& t, const std::string& a, int y)
-	: title(t), author(a), year(y) {}
-
 Book::Book(const std::string& t, const std::string& a, int y, char c)
 	: title(t), author(a), year(y) {
-	if (!a.empty() && a[0] != c) {
-		std::cout << "Ошибка первая буква автора " << a << " это " << a[0] << " ,а не " << c << std::endl;
-	}
-	else {
-		std::cout << "Буква правильная " << std::endl;
+	if (c != '*') {
+		if (!a.empty() && a[0] != c) {
+			std::cout << "Ошибка первая буква автора " << a << " это " << a[0] << " ,а не " << c << std::endl;
+		}
+		else {
+			std::cout << "Буква правильная " << std::endl;
+		}
 	}
 }
 

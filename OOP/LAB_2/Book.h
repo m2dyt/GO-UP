@@ -8,11 +8,10 @@ private:
 	std::string author;
 	int year;
 public:
-	Book();// кон по умолчанию
-	Book(const std::string& title,const std::string& author, int year);// кон с параметрами
-	Book(const std::string& title, const std::string& author, int year, char chek);
+	Book();
+	Book(const std::string& title, const std::string& author, int year, char chek='*');
 	Book(Book& other_book);
-	~Book(); // деструктор
+	~Book();
 
 	void SetTitle(const std::string& t);
 	void SetAuthor(const std::string& a);
