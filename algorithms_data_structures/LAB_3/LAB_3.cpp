@@ -7,7 +7,7 @@ struct Task {
     int p0_time;//  время выполнения на процессоре P0
     int p1_time;// время выполнения на процессоре P1
     int rem_time; // оставшееся время выполнения на текущем процессоре
-    int stage; // 0 = P0        1 = P1
+    int stage; // 0 = P0  1 = P1
     // СТРУКТУРА ТАСКИ
 };
 
@@ -46,7 +46,7 @@ public:
         Node* temp = top_node; 
         Task t = temp->task; 
         top_node = top_node->next;
-        delete temp;// удаляем старую вершину
+        delete temp;
         return t; // ИЗВЛЕКАЕМ ТАСКУ
     }
 
@@ -94,7 +94,7 @@ public:
         Task t = temp->task;
         head = temp->next;
         if (!head) {
-            tail = nullptr; // если стэк пустой занулить хвост
+            tail = nullptr; 
         }
         delete temp;
         return t;  // ИЗВЛЕКАЕМ ТАСКУ

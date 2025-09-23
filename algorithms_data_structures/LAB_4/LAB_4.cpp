@@ -10,12 +10,14 @@ using namespace std;
 const int M = 3000; // размер хеш-таблицы
 
 // Состояние ячейки хеш-таблицы
-enum CellState { EMPTY, OCCUPIED, DELETED };
+const int EMPTY = 0;
+const int OCCUPIED = 1;
+const int DELETED = 2;
 
 
 struct Cell {
     string key;
-    CellState state = EMPTY; // состояние: пусто, занято или удалено
+    int state = EMPTY; // состояние: пусто, занято или удалено
 };
 
 
@@ -67,9 +69,6 @@ bool insertKey(const string& key) {
             table[pos].key = key;
             table[pos].state = OCCUPIED;
             return true;
-        }
-        if (table[idx].state == OCCUPIED && table[idx].key == key) {
-            return true; // ключ уже есть
         }
         if (table[idx].state == DELETED && firstDeleted == -1) {
             firstDeleted = idx; // запоминаем первую удалённую ячейку
@@ -131,7 +130,7 @@ string generateKey(mt19937& gen) {
     return key;
 }
 
-// Экспорт количества попаданий в сегменты в файл hits.txt для построения гистограммы
+// Экспорт количества попаданий в сегменты
 void exportHits() {
     ofstream fout("hits.txt");
     for (int i = 0; i < M; i++) {
@@ -141,19 +140,6 @@ void exportHits() {
     cout << "Файл hits.txt сохранён для построения гистограммы в Excel.\n";
 }
 
-// Экспорт всей таблицы в файл table.txt
-void exportTable() {
-    ofstream fout("table.txt");
-    for (int i = 0; i < M; i++) {
-        fout << i << " ";
-        if (table[i].state == OCCUPIED) fout << table[i].key;
-        else if (table[i].state == DELETED) fout << "[deleted]";
-        else fout << "[empty]";
-        fout << "\n";
-    }
-    fout.close();
-    cout << "Файл table.txt сохранён (содержимое таблицы).\n";
-}
 
 // Вывод таблицы на экран
 void showTable() {
@@ -177,7 +163,6 @@ void menu() {
     cout << "6. Экспортировать hits.txt для Excel\n";
     cout << "7. Просмотреть всю таблицу\n";
     cout << "8. Поиск по номеру сегмента\n";
-    cout << "9. Экспортировать таблицу (table.txt)\n";
     cout << "0. Выход\n";
     cout << "Выберите действие: ";
 }
@@ -248,9 +233,6 @@ int main() {
             cout << "Введите номер сегмента: ";
             cin >> seg;
             findBySegment(seg);
-        }
-        else if (choice == 9) { // экспорт таблицы
-            exportTable();
         }
         else {
             cout << "Неверный выбор, попробуйте снова.\n";
