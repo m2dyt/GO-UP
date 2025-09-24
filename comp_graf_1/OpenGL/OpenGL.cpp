@@ -9,7 +9,6 @@ void initLab1() {
     glShadeModel(GL_SMOOTH); // сглаживание цветов
 }
 
-
 void initLab3() {
     // Настройка источника света
     static float position[] = { 1.0, 1.0, 1.0, 1.0 };
