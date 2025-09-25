@@ -49,8 +49,7 @@ bool isValidKey(char* key) {
     return true;
 }
 
-
-// Полиномиальное хеширование
+// хитрый типа полиномиальный хэш
 int computeHash(char* key) {
     long long h = 0;
     for (int i = 0; i < 6; i++) {
@@ -61,7 +60,7 @@ int computeHash(char* key) {
 }
 
 
-// Вставка ключа (квадратичное опробование)
+// квадратичное опробование
 bool insertKey(char* key) {
     if (!isValidKey(key)) {
         cout << "ключ " << key << " имеет неверный формат!\n";
