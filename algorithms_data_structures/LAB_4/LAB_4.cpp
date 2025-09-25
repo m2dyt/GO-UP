@@ -1,63 +1,80 @@
 ﻿#include <iostream>
-#include <vector>
-#include <string>
 #include <random>
 #include <fstream>
 #include <locale>
 
 using namespace std;
 
-const int M = 3000; // размер хеш-таблицы
+const int M = 3000;  // размер хеш-таблицы
+const int KEY_SIZE = 7; 
 
-// Состояние ячейки хеш-таблицы
+// Состояния ячейки
 const int EMPTY = 0;
 const int OCCUPIED = 1;
 const int DELETED = 2;
 
 
 struct Cell {
-    string key;
-    int state = EMPTY; // состояние: пусто, занято или удалено
+    char key[KEY_SIZE]; // массив для хранения ключа
+    int state = EMPTY;  // состояние 
 };
 
+Cell table[M];// хеш-таблица
+int BadKeysCount = 0;
+int hits[M] = {0};// счётчик попаданий в сегменты
 
-vector<Cell> table(M); // сама хеш-таблица
-vector<string> BadKeys; // список ключей, которые не удалось вставить
-vector<int> hits(M, 0); // количество попаданий в каждый сегмент для анализа распределения
 
-// Проверка ключа 
-bool isValidKey(const string& key) {
-    if (key.size() != 6) return false;   
-    for (int i = 0; i < 3; i++) if (!isdigit(key[i])) return false; 
-    if (!(key[3] >= 'A' && key[3] <= 'Z')) return false;            
-    if (!isdigit(key[4]) || !isdigit(key[5])) return false;         
+
+void copyKey(char* dest, const char* src) {
+    for (int i = 0; i < KEY_SIZE; i++) {
+        dest[i] = src[i]; 
+        if (src[i] == '\0') break; 
+    }
+}
+
+
+bool isValidKey(char* key) {
+    for (int i = 0; i < 6; i++) {
+        if (key[i] == '\0') return false;
+    }
+    if (key[6] != '\0') return false;
+
+    for (int i = 0; i < 3; i++) {
+        if (key[i] < '0' || key[i] > '9') return false;
+    }
+    if (key[3] < 'A' || key[3] > 'Z') return false;
+    if (key[4] < '0' || key[4] > '9') return false;
+    if (key[5] < '0' || key[5] > '9') return false;
+
     return true;
 }
 
-// Полиномиальное хеширование 
-int computeHash(const string& key) {
+
+// Полиномиальное хеширование
+int computeHash(char* key) {
     long long h = 0;
     for (int i = 0; i < 6; i++) {
-        long long code = (int)key[i]; // берем код ASCII символа
-        h += (i + 1) * code * code; 
+        long long code = (int)key[i];
+        h += (i + 1) * code * code;
     }
-    return (int)(h % M); 
+    return (int)(h % M);
 }
 
-// Вставка ключа с квадратичным опробованием
-bool insertKey(const string& key) {
-    if (!isValidKey(key)) {  
+
+// Вставка ключа (квадратичное опробование)
+bool insertKey(char* key) {
+    if (!isValidKey(key)) {
         cout << "ключ " << key << " имеет неверный формат!\n";
         return false;
     }
 
-    int h = computeHash(key); // вычисляем хеш
-    hits[h]++;                 // увеличиваем счетчик попаданий в сегмент
+    int h = computeHash(key);
+    hits[h]++;
 
-    int firstDeleted = -1;     // сохраняем индекс первой удалённой ячейки
+    int firstDeleted = -1;
 
     for (int i = 0; i < M; i++) {
-        int idx = (h + i * i) % M; // квадратичное опробование
+        int idx = (h + i * i) % M;
         if (table[idx].state == EMPTY) {
             int pos;
             if (firstDeleted != -1) {
@@ -65,35 +82,46 @@ bool insertKey(const string& key) {
             }
             else {
                 pos = idx;
-            } 
-            table[pos].key = key;
+            }
+            copyKey(table[pos].key, key); 
             table[pos].state = OCCUPIED;
             return true;
         }
         if (table[idx].state == DELETED && firstDeleted == -1) {
-            firstDeleted = idx; // запоминаем первую удалённую ячейку
+            firstDeleted = idx;
         }
     }
 
-    
-    BadKeys.push_back(key);
+    BadKeysCount++;
     cout << "ВНИМАНИЕ: таблица переполнена, ключ " << key << " не вставлен.\n";
     return false;
 }
 
-// Поиск ключа в таблице, возвращает индекс сегмента или -1, если не найден
-int findKey(const string& key) {
+
+// Поиск ключа
+int findKey(char* key) {
     if (!isValidKey(key)) return -1;
     int h = computeHash(key);
     for (int i = 0; i < M; i++) {
-        int idx = (h + i * i) % M; // квадратичное опробование
-        if (table[idx].state == EMPTY) return -1; // пустая ячейка → ключ не найден
-        if (table[idx].state == OCCUPIED && table[idx].key == key) return idx; // найден
+        int idx = (h + i * i) % M;
+        if (table[idx].state == EMPTY) return -1;
+        if (table[idx].state == OCCUPIED) {
+            bool equal = true;
+            for (int j = 0; j < KEY_SIZE; j++) {
+                if (table[idx].key[j] != key[j]) {
+                    equal = false;
+                    break;
+                }
+                if (key[j] == '\0') break;
+            }
+            if (equal) return idx;
+        }
     }
-    return -1; // не найден после полного обхода
+    return -1;
 }
 
-// Поиск по номеру сегмента
+
+// Поиск по сегменту
 void findBySegment(int seg) {
     if (seg < 0 || seg >= M) {
         cout << "Ошибка: сегмент вне диапазона [0.." << M - 1 << "]\n";
@@ -107,30 +135,30 @@ void findBySegment(int seg) {
         cout << "Сегмент " << seg << ": [пусто]\n";
 }
 
-// Удаление ключа (помечаем как DELETED)
-bool deleteKey(const string& key) {
+// Удаление ключа
+bool deleteKey(char* key) {
     int pos = findKey(key);
     if (pos == -1) return false;
     table[pos].state = DELETED;
     return true;
 }
 
-// Генерация случайного ключа 
-string generateKey(mt19937& gen) {
+
+// Генерация случайного ключа
+void generateKey(char* key, mt19937& gen) {
     uniform_int_distribution<int> digit(0, 9);
     uniform_int_distribution<int> letter(0, 25);
 
-    string key;
-    key += char('0' + digit(gen)); // цифра
-    key += char('0' + digit(gen));
-    key += char('0' + digit(gen));
-    key += char('A' + letter(gen)); // буква
-    key += char('0' + digit(gen));
-    key += char('0' + digit(gen));
-    return key;
+    key[0] = '0' + digit(gen);
+    key[1] = '0' + digit(gen);
+    key[2] = '0' + digit(gen);
+    key[3] = 'A' + letter(gen);
+    key[4] = '0' + digit(gen);
+    key[5] = '0' + digit(gen);
+    key[6] = '\0';
 }
 
-// Экспорт количества попаданий в сегменты
+// Экспорт hits.txt
 void exportHits() {
     ofstream fout("hits.txt");
     for (int i = 0; i < M; i++) {
@@ -139,9 +167,8 @@ void exportHits() {
     fout.close();
     cout << "Файл hits.txt сохранён для построения гистограммы в Excel.\n";
 }
-
-
-// Вывод таблицы на экран
+ 
+// Печать таблицы
 void showTable() {
     for (int i = 0; i < M; i++) {
         cout << i << ": ";
@@ -153,6 +180,7 @@ void showTable() {
 }
 
 
+// Меню
 void menu() {
     cout << "\n===== МЕНЮ =====\n";
     cout << "1. Сгенерировать N случайных ключей\n";
@@ -167,32 +195,33 @@ void menu() {
     cout << "Выберите действие: ";
 }
 
+
 int main() {
-    setlocale(LC_ALL, "Russian"); 
-    mt19937 gen(random_device{}()); // генератор случайных чисел
+    setlocale(LC_ALL, "Russian");
+    mt19937 gen(random_device{}());
 
     int choice = -1;
-
-    while (true) { 
+    while (true) {
         menu();
         cin >> choice;
 
-        if (choice == 0) { // выход
+        if (choice == 0) {
             cout << "Выход из программы.\n";
             break;
         }
-        else if (choice == 1) { // генерация N случайных ключей
+        else if (choice == 1) {
             int N;
             cout << "Введите количество случайных ключей: ";
             cin >> N;
             for (int i = 0; i < N; i++) {
-                string key = generateKey(gen);
+                char key[KEY_SIZE];
+                generateKey(key, gen);
                 insertKey(key);
             }
             cout << "Сгенерировано и вставлено " << N << " ключей.\n";
         }
-        else if (choice == 2) { // вставка ключа вручную
-            string key;
+        else if (choice == 2) {
+            char key[KEY_SIZE];
             cout << "Введите ключ (формат цццБцц): ";
             cin >> key;
             if (insertKey(key))
@@ -200,8 +229,8 @@ int main() {
             else
                 cout << "Не удалось вставить ключ " << key << ".\n";
         }
-        else if (choice == 3) { // поиск ключа
-            string key;
+        else if (choice == 3) {
+            char key[KEY_SIZE];
             cout << "Введите ключ для поиска: ";
             cin >> key;
             int pos = findKey(key);
@@ -210,8 +239,8 @@ int main() {
             else
                 cout << "Ключ не найден.\n";
         }
-        else if (choice == 4) { // удаление ключа
-            string key;
+        else if (choice == 4) {
+            char key[KEY_SIZE];
             cout << "Введите ключ для удаления: ";
             cin >> key;
             if (deleteKey(key))
@@ -219,16 +248,16 @@ int main() {
             else
                 cout << "Ключ не найден.\n";
         }
-        else if (choice == 5) { // показать BadKeys
-            cout << "Количество BadKeys: " << BadKeys.size() << "\n";
+        else if (choice == 5) {
+            cout << "Количество BadKeys: " << BadKeysCount << "\n";
         }
-        else if (choice == 6) { // экспорт hits.txt
+        else if (choice == 6) {
             exportHits();
         }
-        else if (choice == 7) { // показать всю таблицу
+        else if (choice == 7) {
             showTable();
         }
-        else if (choice == 8) { // поиск по сегменту
+        else if (choice == 8) {
             int seg;
             cout << "Введите номер сегмента: ";
             cin >> seg;
@@ -238,6 +267,5 @@ int main() {
             cout << "Неверный выбор, попробуйте снова.\n";
         }
     }
-
     return 0;
 }

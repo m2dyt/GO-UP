@@ -8,7 +8,6 @@ struct Task {
     int p1_time;// время выполнения на процессоре P1
     int rem_time; // оставшееся время выполнения на текущем процессоре
     int stage; // 0 = P0  1 = P1
-    // СТРУКТУРА ТАСКИ
 };
 
 
@@ -24,7 +23,7 @@ class Stack {
 private:
     Node* top_node;// вершина стэка
 public:
-    Stack() : top_node(nullptr) {} // КОНСТРУКТОР 
+    Stack() : top_node(nullptr) {} 
 
     bool empty() { 
         return (top_node == nullptr); // ПУСТОЙ ЛИ 
@@ -66,7 +65,7 @@ private:
     Node* head;
     Node* tail;
 public:
-    Queue() : head(nullptr), tail(nullptr) {} // КОНСТРУКТОР 
+    Queue() : head(nullptr), tail(nullptr) {} 
 
     bool empty() {
         return head == nullptr;  // ПУСТОЙ ЛИ 
