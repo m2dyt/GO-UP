@@ -6,7 +6,7 @@ protected:
 public:
 	Angle(double deg = 0);
 	int getDegrees();  
-	void setDegrees(int deg);  
+	void setDegrees(int deg);
 
 	void normalize();
 	double toRadians();
@@ -15,4 +15,5 @@ public:
 
 	Angle operator+(Angle& other);
 	Angle operator-(Angle& other);
+
 };
