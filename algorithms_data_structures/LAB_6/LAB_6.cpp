@@ -339,7 +339,7 @@ int main() {
     int choice, key;
 
     while (true) {
-        cout << "МЕНЮ ---\n";
+        cout << "МЕНЮ\n";
         cout << "1. Добавить элемент\n";
         cout << "2. Удалить элемент\n";
         cout << "3. Найти элемент\n";
