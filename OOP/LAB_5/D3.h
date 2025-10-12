@@ -1,7 +1,7 @@
 #pragma once
 #include "B.h"
 
-class D3 : private B {
+class D3 : virtual private B {
 private:
     int d3;
 public:

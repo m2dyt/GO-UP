@@ -1,4 +1,4 @@
-#include "D5.h"
+﻿#include "D5.h"
 #include <iostream>
 using namespace std;
 #include "D5.h"
@@ -6,8 +6,12 @@ using namespace std;
 using namespace std;
 
 D5::D5(int b_val, int d2_val, int d3_val, int d5_val)
-    : D2(b_val, d2_val), D3(b_val, d3_val), d5(d5_val) {
+    : B(b_val),          
+    D2(b_val, d2_val),
+    D3(b_val, d3_val),
+    d5(d5_val) {
 }
+
 
 D5::~D5() {
     cout << "D5 destructor\n";
