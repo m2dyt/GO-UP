@@ -154,7 +154,7 @@ void display(void) {
 	glDisable(GL_BLEND);
 
 	
-	glEnable(GL_BLEND);
+	/*glEnable(GL_BLEND);
 	glBlendFunc(GL_ONE, GL_ONE);
 	glMaterialfv(GL_FRONT, GL_AMBIENT, cubeAmb1);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, cubeDif1);
@@ -167,7 +167,7 @@ void display(void) {
 	glRotatef(angleZ, 0.0, 0.0, 0.8);
 	glutSolidCube(1);
 	glDisable(GL_BLEND);
-	glPopMatrix();// вид камеры сд другой  стороны
+	glPopMatrix();// вид камеры сд другой  стороны*/
 
 
 	init();//заново запускаем эту функцию чтобы сменить координаты камеры

@@ -84,6 +84,51 @@ void DeleteElement(int arr[], int& n, int index) {
     QuickSort(arr, 0, n - 1);
 }
 
+int FindKElement(int arr[], int n, int k) {
+    if (k < 1 || k > n) {
+        cout << "Ошибка: k вне диапазона (1.." << n << ")\n";
+        return -1;
+    }
+
+    // Копия массива, чтобы не портить исходный
+    int temp[100];
+    for (int i = 0; i < n; i++) temp[i] = arr[i];
+
+    int low = 0, high = n - 1;
+
+    while (true) {
+        int pivot = temp[(low + high) / 2];  // выбираем опорный элемент
+        int i = low;
+        int j = high;
+
+        while (i <= j) {
+            while (temp[i] < pivot) i++;
+            while (temp[j] > pivot) j--;
+            if (i <= j) {
+                int t = temp[i];
+                temp[i] = temp[j];
+                temp[j] = t;
+                i++;
+                j--;
+            }
+        }
+
+        int leftCount = j - low + 1;
+
+        if (k <= leftCount) {
+            high = j;  // k-й элемент в левой части
+        }
+        else if (k > leftCount + (i - j - 1)) {
+            k = k - (i - low); // сдвигаем k
+            low = i;            // ищем в правой части
+        }
+        else {
+           
+            return pivot;
+        }
+    }
+}
+
 int main() {
     setlocale(LC_ALL, "Russian");
 
@@ -106,6 +151,7 @@ int main() {
         cout << "4 - Поиск по значению\n";
         cout << "5 - Добавить элемент\n";
         cout << "6 - Удалить по индексу\n";
+        cout << "7 - Найти k-ое по порядку число\n";
         cout << "0 - Выход\n";
         cout << "Выберите действие: ";
         int choice;
@@ -149,6 +195,13 @@ int main() {
             DeleteElement(arr, n, idx);
             cout << "Элемент удалён.\n";
             cout << "Сравнений: " << cnt_q << ", Перестановок: " << swaps << endl;
+        }
+        else if (choice == 7) {
+            int k;
+            cout << "Введите k: ";
+            cin >> k;
+            int result = FindKElement(arr, n, k);
+            cout << k << "-е по порядку число = " << result << endl;
         }
         else if (choice == 0) {
             cout << "Выход из программы.\n";
