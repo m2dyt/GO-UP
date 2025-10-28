@@ -4,7 +4,8 @@ class B {
 private:
     int b;
 public:
-    B(int b_val);
+    B(); 
     virtual ~B();
     void show_B();
+    void set_B(int b_val); 
 };

@@ -2,7 +2,11 @@
 #include <iostream>
 using namespace std;
 
-D1::D1(int b_val, int d1_val) : B(b_val), d1(d1_val) {}
+
+D1::D1(int b_val, int d1_val) : d1(d1_val) {
+    cout << "D1 constr = " << d1_val << "\n";
+    set_B(b_val); 
+}
 
 D1::~D1() {
     cout << "D1 destructor\n";

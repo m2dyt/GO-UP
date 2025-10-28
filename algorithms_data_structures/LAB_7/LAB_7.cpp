@@ -14,7 +14,7 @@ int bfs(const vector<vector<int>>& matrix, int start, int days, int maxPerDay) {
     queue<pair<int, int>> q; // (номер сотрудника, день оповещения)
 
     visited[start] = true;
-    q.push({ start, 0 });
+    q.push({ start, 0 }); 
 
     int count = 1; // стартовый сотрудник уже оповещён
 
@@ -149,7 +149,7 @@ int main() {
     inputData(names, matrix, nameToIndex);
 
     while (true) {
-        cout << "МЕНЮ ===\n";
+        cout << "МЕНЮ\n";
         cout << "1. Проверить, полон ли список оповещения\n";
         cout << "2. Посчитать, сколько людей будет оповещено за K дней\n";
         cout << "3. Вывести матрицу смежности\n";
